@@ -96,7 +96,8 @@ function Summary({
   address,
 }) {
   return (
-    <aside className="space-y-4">
+    // <aside className="space-y-4">
+    <aside className="sticky top-5 space-y-4">
       <div className="card">
         <h2 className="mb-4 font-semibold text-slate-900">Order Summary</h2>
         <div className="space-y-3">
@@ -490,576 +491,588 @@ export default function Cart() {
         </div>
       </header>
 
-      <main className="mx-auto grid max-w-6xl gap-5 px-4 py-6 lg:grid-cols-[1fr_360px]">
-        <section className="space-y-5">
-          {step === 0 && (
-            <div className="card">
-              <h2 className="mb-4 text-lg font-semibold text-slate-900">
-                Cart Items
-              </h2>
-              <div className="space-y-3">
-                {items.map((item) => (
-                  <div
-                    key={item.product}
-                    className="flex gap-3 rounded-2xl border border-slate-100 bg-slate-50 p-4">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-sm font-bold text-blue-700">
-                      {item.isJarProduct ? "JAR" : "RO"}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="font-semibold text-slate-900">
-                            {item.name}
-                          </p>
-                          <p className="text-sm text-slate-500">
-                            {money(item.salePrice || item.price)} /{" "}
-                            {item.unit || "unit"}
-                          </p>
-                          {item.isJarProduct && (
-                            <p className="mt-1 text-xs text-amber-600">
-                              Refundable deposit may apply.
-                            </p>
-                          )}
-                        </div>
-                        <button
-                          onClick={() => dispatch(removeFromCart(item.product))}
-                          className="rounded-lg px-2 py-1 text-sm text-slate-400 hover:bg-red-50 hover:text-red-600">
-                          Remove
-                        </button>
-                      </div>
-                      <div className="mt-3 flex items-center justify-between">
-                        <div className="flex overflow-hidden rounded-xl border border-slate-200 bg-white">
-                          <button
-                            onClick={() =>
-                              dispatch(
-                                updateQuantity({
-                                  product: item.product,
-                                  quantity: item.quantity - 1,
-                                }),
-                              )
-                            }
-                            className="h-9 w-9 text-lg font-bold text-slate-500 hover:bg-slate-50">
-                            -
-                          </button>
-                          <span className="flex h-9 w-10 items-center justify-center text-sm font-bold">
-                            {item.quantity}
-                          </span>
-                          <button
-                            onClick={() =>
-                              dispatch(
-                                updateQuantity({
-                                  product: item.product,
-                                  quantity: item.quantity + 1,
-                                }),
-                              )
-                            }
-                            className="h-9 w-9 text-lg font-bold text-slate-500 hover:bg-slate-50">
-                            +
-                          </button>
-                        </div>
-                        <span className="font-bold text-slate-900">
-                          {money(
-                            (item.salePrice || item.price) * item.quantity,
-                          )}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {jarItems.length > 0 && (
-                <div className="mt-6 space-y-3">
-                  <h3 className="font-semibold text-slate-900">
-                    Jar Deposit Choice
-                  </h3>
-                  {jarItems.map((item) => (
+      <main className="mx-auto max-w-7xl px-3 sm:px-4 py-4 sm:py-6">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
+          <section className="space-y-5">
+            {step === 0 && (
+              <div className="card">
+                <h2 className="mb-4 text-lg font-semibold text-slate-900">
+                  Cart Items
+                </h2>
+                <div className="space-y-3">
+                  {items.map((item) => (
                     <div
                       key={item.product}
-                      className="rounded-2xl border border-cyan-100 bg-cyan-50/50 p-4">
-                      <p className="mb-3 text-sm font-semibold text-slate-800">
-                        {item.name} x {item.quantity}
-                      </p>
-                      <div className="grid gap-2 md:grid-cols-2">
-                        {JAR_OPTIONS.map((option) => {
-                          const selected =
-                            (jarOptions[item.product] || "no_jar") ===
-                            option.id;
-                          const deposit = ["no_jar", "return_later"].includes(
-                            option.id,
-                          )
-                            ? jarDepositAmount * item.quantity
-                            : 0;
-                          return (
-                            <button
-                              key={option.id}
-                              type="button"
-                              onClick={() =>
-                                setJarOptions((prev) => ({
-                                  ...prev,
-                                  [item.product]: option.id,
-                                }))
-                              }
-                              className={`rounded-2xl border p-3 text-left transition ${selected ? "border-blue-500 bg-white shadow-sm" : "border-transparent bg-white/70 hover:border-blue-200"}`}>
-                              <div className="flex items-start justify-between gap-3">
-                                <div>
-                                  <p className="text-sm font-semibold text-slate-900">
-                                    {option.label}
-                                  </p>
-                                  <p className="mt-1 text-xs text-slate-500">
-                                    {option.desc}
-                                  </p>
-                                </div>
-                                <span
-                                  className={`badge ${deposit ? "badge-yellow" : "badge-cyan"}`}>
-                                  {option.badge}
-                                </span>
-                              </div>
-                              <p className="mt-2 text-xs font-semibold text-slate-700">
-                                {deposit
-                                  ? `Adds ${money(deposit)}`
-                                  : "Adds Rs. 0"}
+                      className="flex gap-3 rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-sm font-bold text-blue-700">
+                        {item.isJarProduct ? "JAR" : "RO"}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <p className="font-semibold text-slate-900">
+                              {item.name}
+                            </p>
+                            <p className="text-sm text-slate-500">
+                              {money(item.salePrice || item.price)} /{" "}
+                              {item.unit || "unit"}
+                            </p>
+                            {item.isJarProduct && (
+                              <p className="mt-1 text-xs text-amber-600">
+                                Refundable deposit may apply.
                               </p>
+                            )}
+                          </div>
+                          <button
+                            onClick={() =>
+                              dispatch(removeFromCart(item.product))
+                            }
+                            className="rounded-lg px-2 py-1 text-sm text-slate-400 hover:bg-red-50 hover:text-red-600">
+                            Remove
+                          </button>
+                        </div>
+                        <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                          <div className="flex overflow-hidden rounded-xl border border-slate-200 bg-white">
+                            <button
+                              onClick={() =>
+                                dispatch(
+                                  updateQuantity({
+                                    product: item.product,
+                                    quantity: item.quantity - 1,
+                                  }),
+                                )
+                              }
+                              className="h-9 w-9 text-lg font-bold text-slate-500 hover:bg-slate-50">
+                              -
                             </button>
-                          );
-                        })}
+                            <span className="flex h-9 w-10 items-center justify-center text-sm font-bold">
+                              {item.quantity}
+                            </span>
+                            <button
+                              onClick={() =>
+                                dispatch(
+                                  updateQuantity({
+                                    product: item.product,
+                                    quantity: item.quantity + 1,
+                                  }),
+                                )
+                              }
+                              className="h-9 w-9 text-lg font-bold text-slate-500 hover:bg-slate-50">
+                              +
+                            </button>
+                          </div>
+                          <span className="font-bold text-slate-900">
+                            {money(
+                              (item.salePrice || item.price) * item.quantity,
+                            )}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
-              )}
 
-              <button onClick={goToAddress} className="btn-primary mt-6 w-full">
-                Continue to address
-              </button>
-            </div>
-          )}
-
-          {step === 1 && (
-            <div className="card space-y-5">
-              <div>
-                <h2 className="text-lg font-semibold text-slate-900">
-                  Delivery Address
-                </h2>
-                <p className="text-sm text-slate-500">
-                  Pincode is used to block unsupported service areas and apply
-                  fee/minimum order.
-                </p>
-              </div>
-
-              {addresses.length > 0 && (
-                <div className="grid gap-3 md:grid-cols-2">
-                  {addresses.map((address) => (
-                    <button
-                      key={address._id}
-                      type="button"
-                      onClick={() => handleAddressSelect(address)}
-                      className={`rounded-2xl border p-4 text-left transition ${selectedAddress?._id === address._id ? "border-blue-500 bg-blue-50" : "border-slate-200 bg-white hover:border-blue-200"}`}>
-                      <p className="font-semibold text-slate-900">
-                        {address.label || "Address"}
-                      </p>
-                      <p className="mt-1 line-clamp-2 text-sm text-slate-500">
-                        {address.fullAddress}
-                      </p>
-                      <p className="mt-2 text-xs font-medium text-slate-500">
-                        {address.pincode} {address.city}
-                      </p>
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              <div className="rounded-2xl border border-slate-200 p-4">
-                <h3 className="mb-3 font-semibold text-slate-900">
-                  New Address
-                </h3>
-                <div className="grid gap-3 md:grid-cols-2">
-                  <div className="md:col-span-2">
-                    <label className="label">Full Address</label>
-                    <textarea
-                      className="input"
-                      rows={2}
-                      value={manualAddress.fullAddress}
-                      onChange={(event) =>
-                        handleManualChange("fullAddress", event.target.value)
-                      }
-                      placeholder="House, building, street"
-                    />
-                  </div>
-                  <div>
-                    <label className="label">Area / Locality</label>
-                    <input
-                      className="input"
-                      value={manualAddress.area}
-                      onChange={(event) =>
-                        handleManualChange("area", event.target.value)
-                      }
-                      placeholder="Area"
-                    />
-                  </div>
-                  <div>
-                    <label className="label">Pincode</label>
-                    <input
-                      className="input"
-                      inputMode="numeric"
-                      maxLength={6}
-                      value={manualAddress.pincode}
-                      onChange={(event) =>
-                        handleManualChange(
-                          "pincode",
-                          event.target.value.replace(/\D/g, "").slice(0, 6),
-                        )
-                      }
-                      placeholder="110001"
-                    />
-                  </div>
-                  <div>
-                    <label className="label">City</label>
-                    <input
-                      className="input"
-                      value={manualAddress.city}
-                      onChange={(event) =>
-                        handleManualChange("city", event.target.value)
-                      }
-                      placeholder="City"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <button
-                  onClick={() => checkPincode(addressInUse)}
-                  disabled={checkingArea}
-                  className="btn-secondary">
-                  {checkingArea ? "Checking..." : "Check service area"}
-                </button>
-                {delivery?.isServiceable && (
-                  <div className="rounded-xl bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
-                    Delivery {money(delivery.deliveryFee)} | Min{" "}
-                    {money(delivery.minimumOrder)} | ETA {delivery.etaMinutes}{" "}
-                    min
+                {jarItems.length > 0 && (
+                  <div className="mt-6 space-y-3">
+                    <h3 className="font-semibold text-slate-900">
+                      Jar Deposit Choice
+                    </h3>
+                    {jarItems.map((item) => (
+                      <div
+                        key={item.product}
+                        className="rounded-2xl border border-cyan-100 bg-cyan-50/50 p-4">
+                        <p className="mb-3 text-sm font-semibold text-slate-800">
+                          {item.name} x {item.quantity}
+                        </p>
+                        <div className="grid gap-2 md:grid-cols-2">
+                          {JAR_OPTIONS.map((option) => {
+                            const selected =
+                              (jarOptions[item.product] || "no_jar") ===
+                              option.id;
+                            const deposit = ["no_jar", "return_later"].includes(
+                              option.id,
+                            )
+                              ? jarDepositAmount * item.quantity
+                              : 0;
+                            return (
+                              <button
+                                key={option.id}
+                                type="button"
+                                onClick={() =>
+                                  setJarOptions((prev) => ({
+                                    ...prev,
+                                    [item.product]: option.id,
+                                  }))
+                                }
+                                className={`rounded-2xl border p-3 text-left transition ${selected ? "border-blue-500 bg-white shadow-sm" : "border-transparent bg-white/70 hover:border-blue-200"}`}>
+                                <div className="flex items-start justify-between gap-3">
+                                  <div>
+                                    <p className="text-sm font-semibold text-slate-900">
+                                      {option.label}
+                                    </p>
+                                    <p className="mt-1 text-xs text-slate-500">
+                                      {option.desc}
+                                    </p>
+                                  </div>
+                                  <span
+                                    className={`badge ${deposit ? "badge-yellow" : "badge-cyan"}`}>
+                                    {option.badge}
+                                  </span>
+                                </div>
+                                <p className="mt-2 text-xs font-semibold text-slate-700">
+                                  {deposit
+                                    ? `Adds ${money(deposit)}`
+                                    : "Adds Rs. 0"}
+                                </p>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
-              </div>
 
-              <div className="flex gap-3">
-                <button onClick={() => setStep(0)} className="btn-secondary">
-                  Back
-                </button>
-                <button onClick={goToSlot} className="btn-primary flex-1">
-                  Continue to slot
+                <button
+                  onClick={goToAddress}
+                  className="btn-primary mt-6 w-full">
+                  Continue to address
                 </button>
               </div>
-            </div>
-          )}
+            )}
 
-          {step === 2 && (
-            <div className="card space-y-5">
-              <div>
-                <h2 className="text-lg font-semibold text-slate-900">
-                  Delivery Slot
-                </h2>
-                <p className="text-sm text-slate-500">
-                  Choose a delivery date and active admin-configured slot.
-                </p>
-              </div>
-              <div>
-                <label className="label">Date</label>
-                <div className="flex gap-2 overflow-x-auto pb-1">
-                  {dates.map((item) => (
-                    <button
-                      key={item.value}
-                      type="button"
-                      onClick={() => setSelectedDate(item.value)}
-                      className={`min-w-24 rounded-2xl border px-4 py-3 text-left ${selectedDate === item.value ? "border-blue-500 bg-blue-50 text-blue-700" : "border-slate-200 bg-white text-slate-600"}`}>
-                      <p className="text-xs font-bold">{item.label}</p>
-                      <p className="text-sm">{item.date}</p>
-                    </button>
-                  ))}
+            {step === 1 && (
+              <div className="card space-y-5">
+                <div>
+                  <h2 className="text-lg font-semibold text-slate-900">
+                    Delivery Address
+                  </h2>
+                  <p className="text-sm text-slate-500">
+                    Pincode is used to block unsupported service areas and apply
+                    fee/minimum order.
+                  </p>
                 </div>
-              </div>
 
-              <div>
-                <label className="label">Time Slot</label>
-                {!activeSlots.length ? (
-                  <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-700">
-                    No active delivery slots are configured.
-                  </div>
-                ) : (
-                  <div className="grid gap-3 md:grid-cols-3">
-                    {activeSlots.map((slotItem) => (
+                {addresses.length > 0 && (
+                  <div className="grid gap-3 md:grid-cols-2">
+                    {addresses.map((address) => (
                       <button
-                        key={slotItem._id}
+                        key={address._id}
                         type="button"
-                        onClick={() => setSelectedSlot(slotItem._id)}
-                        className={`rounded-2xl border p-4 text-left ${selectedSlot === slotItem._id ? "border-blue-500 bg-blue-50" : "border-slate-200 bg-white hover:border-blue-200"}`}>
+                        onClick={() => handleAddressSelect(address)}
+                        className={`rounded-2xl border p-4 text-left transition ${selectedAddress?._id === address._id ? "border-blue-500 bg-blue-50" : "border-slate-200 bg-white hover:border-blue-200"}`}>
                         <p className="font-semibold text-slate-900">
-                          {slotItem.name}
+                          {address.label || "Address"}
                         </p>
-                        <p className="mt-1 text-xs text-slate-500">
-                          {slotItem.startTime}-{slotItem.endTime}
+                        <p className="mt-1 line-clamp-2 text-sm text-slate-500">
+                          {address.fullAddress}
                         </p>
-                        <p className="mt-2 text-xs font-medium text-cyan-700">
-                          Max {slotItem.maxOrders || 0} orders
+                        <p className="mt-2 text-xs font-medium text-slate-500">
+                          {address.pincode} {address.city}
                         </p>
                       </button>
                     ))}
                   </div>
                 )}
-              </div>
 
-              <div className="flex gap-3">
-                <button onClick={() => setStep(1)} className="btn-secondary">
-                  Back
-                </button>
-                <button onClick={goToPayment} className="btn-primary flex-1">
-                  Continue to payment
-                </button>
-              </div>
-            </div>
-          )}
-
-          {step === 3 && !orderPlaced && (
-            <div className="card space-y-5">
-              <div>
-                <h2 className="text-lg font-semibold text-slate-900">
-                  Payment
-                </h2>
-                <p className="text-sm text-slate-500">
-                  Pay externally for UPI/QR, then upload proof for admin
-                  verification.
-                </p>
-              </div>
-
-              <div className="grid gap-3 md:grid-cols-3">
-                {[
-                  {
-                    id: "upi",
-                    label: "UPI / QR",
-                    desc: "Screenshot and UTR required",
-                  },
-                  ...(settings?.codEnabled !== false
-                    ? [
-                        {
-                          id: "cod",
-                          label: "Cash on Delivery",
-                          desc: "Admin marks cash received",
-                        },
-                      ]
-                    : []),
-                  ...(settings?.payLaterEnabled && user?.allowPayLater
-                    ? [
-                        {
-                          id: "credit",
-                          label: "Pay Later",
-                          desc: "Added to customer dues",
-                        },
-                      ]
-                    : []),
-                ].map((method) => (
-                  <button
-                    key={method.id}
-                    type="button"
-                    onClick={() => setPaymentMethod(method.id)}
-                    className={`rounded-2xl border p-4 text-left ${paymentMethod === method.id ? "border-blue-500 bg-blue-50" : "border-slate-200 bg-white hover:border-blue-200"}`}>
-                    <p className="font-semibold text-slate-900">
-                      {method.label}
-                    </p>
-                    <p className="mt-1 text-xs text-slate-500">{method.desc}</p>
-                  </button>
-                ))}
-              </div>
-
-              {paymentMethod === "upi" && (
-                <div className="overflow-hidden rounded-2xl border border-blue-100">
-                  <div className="grid grid-cols-2 border-b border-blue-100">
-                    <button
-                      type="button"
-                      onClick={() => setUpiMode("qr")}
-                      className={`py-3 text-sm font-semibold ${upiMode === "qr" ? "bg-blue-50 text-blue-700" : "text-slate-500"}`}>
-                      QR scan
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setUpiMode("id")}
-                      className={`py-3 text-sm font-semibold ${upiMode === "id" ? "bg-blue-50 text-blue-700" : "text-slate-500"}`}>
-                      UPI ID
-                    </button>
-                  </div>
-                  {upiMode === "qr" ? (
-                    <div className="p-4 text-center">
-                      <p className="font-semibold text-slate-900">
-                        {settings?.businessName || "RO Water"}
-                      </p>
-                      <p className="text-sm text-slate-500">
-                        Pay {money(total)}
-                      </p>
-                      {settings?.qrImage ? (
-                        <img
-                          src={assetUrl(settings.qrImage)}
-                          alt="Payment QR"
-                          className="mx-auto mt-3 h-48 w-48 rounded-2xl border border-slate-200 bg-white object-contain p-2"
-                        />
-                      ) : (
-                        <div className="mx-auto mt-3 grid h-48 w-48 place-items-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 text-sm text-slate-500">
-                          QR not configured
-                        </div>
-                      )}
+                <div className="rounded-2xl border border-slate-200 p-4">
+                  <h3 className="mb-3 font-semibold text-slate-900">
+                    New Address
+                  </h3>
+                  <div className="grid gap-3 md:grid-cols-2">
+                    <div className="md:col-span-2">
+                      <label className="label">Full Address</label>
+                      <textarea
+                        className="input"
+                        rows={2}
+                        value={manualAddress.fullAddress}
+                        onChange={(event) =>
+                          handleManualChange("fullAddress", event.target.value)
+                        }
+                        placeholder="House, building, street"
+                      />
                     </div>
-                  ) : (
-                    <div className="p-4">
-                      <p className="text-sm text-slate-500">
-                        {settings?.paymentInstructions ||
-                          "Pay to the UPI ID, then upload screenshot and UTR."}
-                      </p>
-                      <div className="mt-3 flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3">
-                        <div className="min-w-0 flex-1">
-                          <p className="text-xs text-slate-500">UPI ID</p>
-                          <p className="truncate font-mono font-bold text-blue-700">
-                            {settings?.upiId || "Not configured"}
-                          </p>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={copyUpi}
-                          className="btn-secondary btn-sm">
-                          {copied ? "Copied" : "Copy"}
-                        </button>
-                      </div>
+                    <div>
+                      <label className="label">Area / Locality</label>
+                      <input
+                        className="input"
+                        value={manualAddress.area}
+                        onChange={(event) =>
+                          handleManualChange("area", event.target.value)
+                        }
+                        placeholder="Area"
+                      />
+                    </div>
+                    <div>
+                      <label className="label">Pincode</label>
+                      <input
+                        className="input"
+                        inputMode="numeric"
+                        maxLength={6}
+                        value={manualAddress.pincode}
+                        onChange={(event) =>
+                          handleManualChange(
+                            "pincode",
+                            event.target.value.replace(/\D/g, "").slice(0, 6),
+                          )
+                        }
+                        placeholder="110001"
+                      />
+                    </div>
+                    <div>
+                      <label className="label">City</label>
+                      <input
+                        className="input"
+                        value={manualAddress.city}
+                        onChange={(event) =>
+                          handleManualChange("city", event.target.value)
+                        }
+                        placeholder="City"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                  <button
+                    onClick={() => checkPincode(addressInUse)}
+                    disabled={checkingArea}
+                    className="btn-secondary">
+                    {checkingArea ? "Checking..." : "Check service area"}
+                  </button>
+                  {delivery?.isServiceable && (
+                    <div className="rounded-xl bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+                      Delivery {money(delivery.deliveryFee)} | Min{" "}
+                      {money(delivery.minimumOrder)} | ETA {delivery.etaMinutes}{" "}
+                      min
                     </div>
                   )}
-                  <div className="border-t border-blue-100 p-4">
-                    <button
-                      type="button"
-                      onClick={openUpi}
-                      className="btn-primary w-full">
-                      Open UPI app for {money(total)}
-                    </button>
-                    <div className="mt-4 grid gap-3 md:grid-cols-2">
-                      <div>
-                        <label className="label">UTR / Transaction ID</label>
-                        <input
-                          className="input"
-                          value={utrNumber}
-                          onChange={(event) => setUtrNumber(event.target.value)}
-                          placeholder="Enter UTR"
-                        />
-                      </div>
-                      <div>
-                        <label className="label">Screenshot</label>
-                        <input
-                          ref={fileRef}
-                          className="hidden"
-                          type="file"
-                          accept="image/jpeg,image/png,image/webp"
-                          onChange={handleFile}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => fileRef.current?.click()}
-                          className="btn-secondary w-full">
-                          {screenshot
-                            ? "Change screenshot"
-                            : "Upload screenshot"}
-                        </button>
-                      </div>
-                    </div>
-                    {screenshotPreview && (
-                      <img
-                        src={screenshotPreview}
-                        alt="Payment proof preview"
-                        className="mt-3 max-h-56 w-full rounded-2xl border border-slate-200 object-contain"
-                      />
-                    )}
+                </div>
+
+                <div className="flex gap-3">
+                  <button onClick={() => setStep(0)} className="btn-secondary">
+                    Back
+                  </button>
+                  <button onClick={goToSlot} className="btn-primary flex-1">
+                    Continue to slot
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {step === 2 && (
+              <div className="card space-y-5">
+                <div>
+                  <h2 className="text-lg font-semibold text-slate-900">
+                    Delivery Slot
+                  </h2>
+                  <p className="text-sm text-slate-500">
+                    Choose a delivery date and active admin-configured slot.
+                  </p>
+                </div>
+                <div>
+                  <label className="label">Date</label>
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-5">
+                    {dates.map((item) => (
+                      <button
+                        key={item.value}
+                        type="button"
+                        onClick={() => setSelectedDate(item.value)}
+                        className={`w-full rounded-2xl border px-4 py-3 text-left ${selectedDate === item.value ? "border-blue-500 bg-blue-50 text-blue-700" : "border-slate-200 bg-white text-slate-600"}`}>
+                        <p className="text-xs font-bold">{item.label}</p>
+                        <p className="text-sm">{item.date}</p>
+                      </button>
+                    ))}
                   </div>
                 </div>
-              )}
 
-              {paymentMethod === "cod" && (
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-                  Cash will be collected at delivery and marked received by
-                  admin.
+                <div>
+                  <label className="label">Time Slot</label>
+                  {!activeSlots.length ? (
+                    <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-700">
+                      No active delivery slots are configured.
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                      {activeSlots.map((slotItem) => (
+                        <button
+                          key={slotItem._id}
+                          type="button"
+                          onClick={() => setSelectedSlot(slotItem._id)}
+                          className={`rounded-2xl border p-4 text-left ${selectedSlot === slotItem._id ? "border-blue-500 bg-blue-50" : "border-slate-200 bg-white hover:border-blue-200"}`}>
+                          <p className="font-semibold text-slate-900">
+                            {slotItem.name}
+                          </p>
+                          <p className="mt-1 text-xs text-slate-500">
+                            {slotItem.startTime}-{slotItem.endTime}
+                          </p>
+                          <p className="mt-2 text-xs font-medium text-cyan-700">
+                            Max {slotItem.maxOrders || 0} orders
+                          </p>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              )}
 
-              {paymentMethod === "credit" && (
-                <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700">
-                  This order will be added to your outstanding dues.
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <button
+                    onClick={() => setStep(1)}
+                    className="btn-secondary w-full sm:w-auto">
+                    Back
+                  </button>
+
+                  <button onClick={goToPayment} className="btn-primary w-full">
+                    Continue to Payment
+                  </button>
                 </div>
-              )}
+              </div>
+            )}
 
-              <div className="grid gap-3 md:grid-cols-[1fr_auto]">
-                <input
-                  className="input"
-                  value={coupon}
-                  onChange={(event) =>
-                    setCoupon(event.target.value.toUpperCase())
-                  }
-                  placeholder="Coupon code"
-                />
-                <button
-                  onClick={applyCoupon}
-                  disabled={validatingCoupon}
-                  className="btn-secondary">
-                  {validatingCoupon ? "Checking..." : "Apply coupon"}
-                </button>
-              </div>
-              <div>
-                <label className="label">Order Notes</label>
-                <input
-                  className="input"
-                  value={notes}
-                  onChange={(event) => setNotes(event.target.value)}
-                  placeholder="Call before delivery, landmark, etc."
-                />
-              </div>
+            {step === 3 && !orderPlaced && (
+              <div className="card space-y-5">
+                <div>
+                  <h2 className="text-lg font-semibold text-slate-900">
+                    Payment
+                  </h2>
+                  <p className="text-sm text-slate-500">
+                    Pay externally for UPI/QR, then upload proof for admin
+                    verification.
+                  </p>
+                </div>
 
-              <div className="flex gap-3">
-                <button onClick={() => setStep(2)} className="btn-secondary">
-                  Back
-                </button>
-                <button
-                  onClick={placeOrder}
-                  disabled={placing || submittingProof}
-                  className="btn-primary flex-1">
-                  {placing || submittingProof
-                    ? "Placing..."
-                    : `Place order - ${money(total)}`}
-                </button>
-              </div>
-            </div>
-          )}
+                <div className="grid gap-3 md:grid-cols-3">
+                  {[
+                    {
+                      id: "upi",
+                      label: "UPI / QR",
+                      desc: "Screenshot and UTR required",
+                    },
+                    ...(settings?.codEnabled !== false
+                      ? [
+                          {
+                            id: "cod",
+                            label: "Cash on Delivery",
+                            desc: "Admin marks cash received",
+                          },
+                        ]
+                      : []),
+                    ...(settings?.payLaterEnabled && user?.allowPayLater
+                      ? [
+                          {
+                            id: "credit",
+                            label: "Pay Later",
+                            desc: "Added to customer dues",
+                          },
+                        ]
+                      : []),
+                  ].map((method) => (
+                    <button
+                      key={method.id}
+                      type="button"
+                      onClick={() => setPaymentMethod(method.id)}
+                      className={`rounded-2xl border p-4 text-left ${paymentMethod === method.id ? "border-blue-500 bg-blue-50" : "border-slate-200 bg-white hover:border-blue-200"}`}>
+                      <p className="font-semibold text-slate-900">
+                        {method.label}
+                      </p>
+                      <p className="mt-1 text-xs text-slate-500">
+                        {method.desc}
+                      </p>
+                    </button>
+                  ))}
+                </div>
 
-          {orderPlaced && (
-            <div className="card py-10 text-center">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-2xl font-black text-emerald-600">
-                OK
+                {paymentMethod === "upi" && (
+                  <div className="overflow-hidden rounded-2xl border border-blue-100">
+                    <div className="grid grid-cols-2 border-b border-blue-100">
+                      <button
+                        type="button"
+                        onClick={() => setUpiMode("qr")}
+                        className={`py-3 text-sm font-semibold ${upiMode === "qr" ? "bg-blue-50 text-blue-700" : "text-slate-500"}`}>
+                        QR scan
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setUpiMode("id")}
+                        className={`py-3 text-sm font-semibold ${upiMode === "id" ? "bg-blue-50 text-blue-700" : "text-slate-500"}`}>
+                        UPI ID
+                      </button>
+                    </div>
+                    {upiMode === "qr" ? (
+                      <div className="p-4 text-center">
+                        <p className="font-semibold text-slate-900">
+                          {settings?.businessName || "RO Water"}
+                        </p>
+                        <p className="text-sm text-slate-500">
+                          Pay {money(total)}
+                        </p>
+                        {settings?.qrImage ? (
+                          <img
+                            src={assetUrl(settings.qrImage)}
+                            alt="Payment QR"
+                            className="mx-auto mt-3 h-48 w-48 rounded-2xl border border-slate-200 bg-white object-contain p-2"
+                          />
+                        ) : (
+                          <div className="mx-auto mt-3 grid h-48 w-48 place-items-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 text-sm text-slate-500">
+                            QR not configured
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="p-4">
+                        <p className="text-sm text-slate-500">
+                          {settings?.paymentInstructions ||
+                            "Pay to the UPI ID, then upload screenshot and UTR."}
+                        </p>
+                        <div className="mt-3 flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3">
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs text-slate-500">UPI ID</p>
+                            <p className="truncate font-mono font-bold text-blue-700">
+                              {settings?.upiId || "Not configured"}
+                            </p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={copyUpi}
+                            className="btn-secondary btn-sm">
+                            {copied ? "Copied" : "Copy"}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    <div className="border-t border-blue-100 p-4">
+                      <button
+                        type="button"
+                        onClick={openUpi}
+                        className="btn-primary w-full">
+                        Open UPI app for {money(total)}
+                      </button>
+                      <div className="mt-4 grid gap-3 md:grid-cols-2">
+                        <div>
+                          <label className="label">UTR / Transaction ID</label>
+                          <input
+                            className="input"
+                            value={utrNumber}
+                            onChange={(event) =>
+                              setUtrNumber(event.target.value)
+                            }
+                            placeholder="Enter UTR"
+                          />
+                        </div>
+                        <div>
+                          <label className="label">Screenshot</label>
+                          <input
+                            ref={fileRef}
+                            className="hidden"
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp"
+                            onChange={handleFile}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => fileRef.current?.click()}
+                            className="btn-secondary w-full">
+                            {screenshot
+                              ? "Change screenshot"
+                              : "Upload screenshot"}
+                          </button>
+                        </div>
+                      </div>
+                      {screenshotPreview && (
+                        <img
+                          src={screenshotPreview}
+                          alt="Payment proof preview"
+                          className="mt-3 max-h-56 w-full rounded-2xl border border-slate-200 object-contain"
+                        />
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {paymentMethod === "cod" && (
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+                    Cash will be collected at delivery and marked received by
+                    admin.
+                  </div>
+                )}
+
+                {paymentMethod === "credit" && (
+                  <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700">
+                    This order will be added to your outstanding dues.
+                  </div>
+                )}
+
+                <div className="grid gap-3 md:grid-cols-[1fr_auto]">
+                  <input
+                    className="input"
+                    value={coupon}
+                    onChange={(event) =>
+                      setCoupon(event.target.value.toUpperCase())
+                    }
+                    placeholder="Coupon code"
+                  />
+                  <button
+                    onClick={applyCoupon}
+                    disabled={validatingCoupon}
+                    className="btn-secondary">
+                    {validatingCoupon ? "Checking..." : "Apply coupon"}
+                  </button>
+                </div>
+                <div>
+                  <label className="label">Order Notes</label>
+                  <input
+                    className="input"
+                    value={notes}
+                    onChange={(event) => setNotes(event.target.value)}
+                    placeholder="Call before delivery, landmark, etc."
+                  />
+                </div>
+
+                <div className="flex gap-3">
+                  <button onClick={() => setStep(2)} className="btn-secondary">
+                    Back
+                  </button>
+                  <button
+                    onClick={placeOrder}
+                    disabled={placing || submittingProof}
+                    className="btn-primary flex-1">
+                    {placing || submittingProof
+                      ? "Placing..."
+                      : `Place order - ${money(total)}`}
+                  </button>
+                </div>
               </div>
-              <h2 className="text-2xl font-bold text-slate-950">
-                Order placed
-              </h2>
-              <p className="mt-2 text-sm text-slate-500">
-                Order #{orderPlaced.orderNumber}
-              </p>
-              {paymentMethod === "upi" && (
-                <p className="mt-2 text-sm font-medium text-amber-600">
-                  Payment is pending admin verification.
+            )}
+
+            {orderPlaced && (
+              <div className="card py-10 text-center">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-2xl font-black text-emerald-600">
+                  OK
+                </div>
+                <h2 className="text-2xl font-bold text-slate-950">
+                  Order placed
+                </h2>
+                <p className="mt-2 text-sm text-slate-500">
+                  Order #{orderPlaced.orderNumber}
                 </p>
-              )}
-              <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
-                <Link to="/orders" className="btn-primary">
-                  Track order
-                </Link>
-                <Link to="/products" className="btn-secondary">
-                  Shop more
-                </Link>
+                {paymentMethod === "upi" && (
+                  <p className="mt-2 text-sm font-medium text-amber-600">
+                    Payment is pending admin verification.
+                  </p>
+                )}
+                <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+                  <Link to="/orders" className="btn-primary">
+                    Track order
+                  </Link>
+                  <Link to="/products" className="btn-secondary">
+                    Shop more
+                  </Link>
+                </div>
               </div>
-            </div>
-          )}
-        </section>
+            )}
+          </section>
 
-        <Summary
+          {/* <Summary
           items={items}
           subtotal={subtotal}
           depositTotal={depositTotal}
@@ -1068,7 +1081,20 @@ export default function Cart() {
           total={total}
           slotLabel={slotLabel}
           address={addressInUse?.fullAddress}
-        />
+        /> */}
+          <div className="hidden lg:block">
+            <Summary
+              items={items}
+              subtotal={subtotal}
+              depositTotal={depositTotal}
+              deliveryFee={delivery?.deliveryFee}
+              discount={couponDiscount}
+              total={total}
+              slotLabel={slotLabel}
+              address={addressInUse?.fullAddress}
+            />
+          </div>
+        </div>
       </main>
     </div>
   );
