@@ -1,10 +1,12 @@
-import { useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import { io } from 'socket.io-client';
-import { baseApi } from '../services/baseApi';
+import { useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { io } from "socket.io-client";
+import { baseApi } from "../services/baseApi";
 
 // Derives the socket server URL from the same env var used by RTK Query
-const SERVER_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api').replace(/\/api\/?$/, '');
+const SERVER_URL = (
+  import.meta.env.VITE_API_BASE_URL || "https://roapp.onrender.com/api"
+).replace(/\/api\/?$/, "");
 
 /**
  * Connects to the Socket.IO server using the stored JWT token.
@@ -20,12 +22,12 @@ export function useSocketNotifications() {
   const socketRef = useRef(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('ro_token');
+    const token = localStorage.getItem("ro_token");
     if (!token) return;
 
     const socket = io(SERVER_URL, {
       auth: { token },
-      transports: ['websocket', 'polling'],
+      transports: ["websocket", "polling"],
       reconnectionAttempts: 10,
       reconnectionDelay: 2000,
       reconnectionDelayMax: 10000,
@@ -33,16 +35,16 @@ export function useSocketNotifications() {
 
     socketRef.current = socket;
 
-    socket.on('notification:new', () => {
-      dispatch(baseApi.util.invalidateTags(['Notifications']));
+    socket.on("notification:new", () => {
+      dispatch(baseApi.util.invalidateTags(["Notifications"]));
     });
 
-    socket.on('message:new', () => {
-      dispatch(baseApi.util.invalidateTags(['Messages', 'Notifications']));
+    socket.on("message:new", () => {
+      dispatch(baseApi.util.invalidateTags(["Messages", "Notifications"]));
     });
 
     // Silent failure — polling handles the fallback
-    socket.on('connect_error', () => {});
+    socket.on("connect_error", () => {});
 
     return () => {
       socket.disconnect();

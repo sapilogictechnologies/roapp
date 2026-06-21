@@ -6,10 +6,10 @@ A complete MERN (MongoDB, Express, React, Node.js) application for an RO Water S
 
 ## Default Credentials
 
-| Role     | Email                  | Password       |
-|----------|------------------------|----------------|
-| Admin    | admin@roapp.com        | Admin@12345    |
-| Customer | customer@test.com      | Customer@123   |
+| Role     | Email             | Password     |
+| -------- | ----------------- | ------------ |
+| Admin    | admin@roapp.com   | Admin@12345  |
+| Customer | customer@test.com | Customer@123 |
 
 ---
 
@@ -29,6 +29,7 @@ npm install
 ```
 
 Edit `server/.env` and replace `MONGO_URI` with your real MongoDB Atlas URI:
+
 ```
 MONGO_URI=mongodb+srv://YOUR_USER:YOUR_PASS@cluster0.xxxx.mongodb.net/ro-water-supply?retryWrites=true&w=majority
 ```
@@ -47,7 +48,7 @@ This creates admin, customer, products, pricing, time slots, settings, and coupo
 npm run dev
 ```
 
-Server runs on http://localhost:5000
+Server runs on https://roapp.onrender.com
 
 ### 5. Setup Frontend
 
@@ -138,24 +139,26 @@ Frontend runs on http://localhost:5173
 ## Environment Variables
 
 ### server/.env
-| Variable | Description |
-|----------|-------------|
-| PORT | Backend port (default: 5000) |
-| MONGO_URI | MongoDB Atlas connection string |
-| JWT_SECRET | Secret key for JWT tokens |
-| JWT_EXPIRES_IN | Token expiry (default: 7d) |
-| CLIENT_URL | Frontend URL for CORS |
-| ADMIN_EMAIL | Default admin email |
-| ADMIN_PASSWORD | Default admin password |
-| UPLOAD_DIR | Path for file uploads |
-| MAX_FILE_SIZE | Max upload size in bytes |
+
+| Variable       | Description                     |
+| -------------- | ------------------------------- |
+| PORT           | Backend port (default: 5000)    |
+| MONGO_URI      | MongoDB Atlas connection string |
+| JWT_SECRET     | Secret key for JWT tokens       |
+| JWT_EXPIRES_IN | Token expiry (default: 7d)      |
+| CLIENT_URL     | Frontend URL for CORS           |
+| ADMIN_EMAIL    | Default admin email             |
+| ADMIN_PASSWORD | Default admin password          |
+| UPLOAD_DIR     | Path for file uploads           |
+| MAX_FILE_SIZE  | Max upload size in bytes        |
 
 ### client/.env
-| Variable | Description |
-|----------|-------------|
-| VITE_API_BASE_URL | Backend API URL |
-| VITE_APP_NAME | App name shown in UI |
-| VITE_ENABLE_PWA | Enable PWA features |
+
+| Variable          | Description          |
+| ----------------- | -------------------- |
+| VITE_API_BASE_URL | Backend API URL      |
+| VITE_APP_NAME     | App name shown in UI |
+| VITE_ENABLE_PWA   | Enable PWA features  |
 
 ---
 
@@ -184,32 +187,35 @@ Frontend runs on http://localhost:5173
 ## Troubleshooting MongoDB Connection
 
 **Error: `MongoServerSelectionError`**
+
 - Check that `MONGO_URI` is correct in `server/.env`
 - Add `0.0.0.0/0` to MongoDB Atlas IP Allowlist
 - Ensure username/password in the URI has no special chars (URL-encode them if needed)
 
 **Error: `Authentication failed`**
+
 - Re-check database user credentials in Atlas → Database Access
 
 **Error: `ECONNREFUSED`**
+
 - You might be using a local MongoDB URI. Use Atlas URI instead.
 
 ---
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | React 18, Vite, Tailwind CSS |
-| State | Redux Toolkit + RTK Query |
-| Routing | React Router v6 |
-| Backend | Node.js, Express.js |
-| Database | MongoDB (Mongoose) |
-| Auth | JWT + bcrypt |
-| File Upload | Multer |
-| Security | Helmet, CORS, Rate Limiting |
-| Distance | Haversine formula (no paid APIs) |
-| Payment | Manual UPI proof system |
+| Layer       | Technology                       |
+| ----------- | -------------------------------- |
+| Frontend    | React 18, Vite, Tailwind CSS     |
+| State       | Redux Toolkit + RTK Query        |
+| Routing     | React Router v6                  |
+| Backend     | Node.js, Express.js              |
+| Database    | MongoDB (Mongoose)               |
+| Auth        | JWT + bcrypt                     |
+| File Upload | Multer                           |
+| Security    | Helmet, CORS, Rate Limiting      |
+| Distance    | Haversine formula (no paid APIs) |
+| Payment     | Manual UPI proof system          |
 
 ---
 
